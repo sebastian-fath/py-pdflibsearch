@@ -16,3 +16,11 @@ This is a extremely rudimentary implementation of a way to search multiple pdf-f
     - `-f` (`--file, --filepath`): string specifying non-standard directories or files to search. **REQUIRED WHEN RUNNING IN MODE 'FILE'**.
     - `-h` (`--help`): if specified prints usage
     - `-o` (`--open`): if specified, the programm will automatically open all pdf-files in a webbrowser or standard-editor, where the searchstring was found. 
+
+
+# Project Roadmap
+
+- [ ] Implement multiple searchterms
+- [x] Implement Opening 
+    - [ ] Highlighting?
+    - [ ] Web-Portal / Integration?

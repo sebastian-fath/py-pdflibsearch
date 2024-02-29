@@ -17,7 +17,7 @@ def main(argv):
     # set defaults
     mode = 'folder'
     input = ''
-    filepath = ''
+    filepath = 'Library'
     shouldOpen = False
 
     opts, args = getopt.getopt(argv, "hm:i:f:o",["--mode","--input", "--help", "--file", "--filepath", "--open"])
@@ -39,12 +39,10 @@ def main(argv):
         if opt in ('-o', '--open'):
             shouldOpen = True
 
+    # check what to run if run from cli and execute the necessary functions with the necessary arguments, etc.
     #print(f"searching {mode} for \"{input}\"")
     if mode == 'folder':
-        if filepath != '':
-            d_foldersearch = pd.DataFrame(foldersearch(input, filepath, shouldOpen=shouldOpen), columns=["filename", "pagenumber", "occurences"])
-        else:
-            d_foldersearch = pd.DataFrame(foldersearch(input, shouldOpen=shouldOpen), columns=["filename", "pagenumber", "occurences"])
+        d_foldersearch = pd.DataFrame(foldersearch(input, filepath, shouldOpen=shouldOpen), columns=["filename", "pagenumber", "occurences"])
         print(d_foldersearch)
     elif mode == 'file':
         d_filesearch = pd. DataFrame(filesearch(input, filepath, shouldOpen=shouldOpen), columns=["page", "pagenumbers"])
@@ -53,8 +51,9 @@ def main(argv):
         print("please specify a valid mode by which to search")
 
 # searches folder "path" for string (usually 'library'), returns array of arrays : filename, pagenumber, occurences
-def foldersearch(input : str, path : str = 'library', shouldOpen : bool = False):
+def foldersearch(input : str, path : str, shouldOpen : bool = False):
     hits = []
+    # Iterate over contents of specified path "path" and check wether they are pdfs; if yes open PDF and look for searchstring in pages.
     for file in os.listdir(path):
         if file.endswith('.pdf'):    
             FileReader = PyPDF2.PdfReader(f"{path}/{file}")
@@ -62,8 +61,9 @@ def foldersearch(input : str, path : str = 'library', shouldOpen : bool = False)
             for page in FileReader.pages:
                 # if input string is found in extracted text from page print filename and pagenumber
                 if input in page.extract_text():
-                    hits.append([file, FileReader.get_page_number(page), page.extract_text().count(input)])
+                    hits.append([file, FileReader.get_page_number(page) + 1, page.extract_text().count(input)]) # Add 1 to pagenumber due to 0- vs. 1-indexing :/
                     hasOccured = True
+            # check, wether script should open file in browser and wether a occurence was found in the file. If yes: open new tab to file://... URL.
             if hasOccured & shouldOpen:
                 webbrowser.open_new_tab(f"file://{os.path.abspath(f"{path}/{file}")}") # f"{path}/{file} curiously worked to fix issue, where os.path.abspath(file) didn't open cwd/path/file but cwd/file. Looking at earlier code this usage actually kinda makes sense :/
         else: 
@@ -72,6 +72,7 @@ def foldersearch(input : str, path : str = 'library', shouldOpen : bool = False)
 
 # searches file at "path" for string (usually 'library'), returns array of arrays : pagenumber, occurences
 def filesearch(input : str, filepath : str, shouldOpen : bool = False):
+    # check wether wether specified path filepath is pdf; if yes open PDF and look for searchstring in pages.
     if filepath.endswith('.pdf') != True:
         ValueError('file is not specified or is not a .pdf!')
     hits = []
@@ -82,6 +83,7 @@ def filesearch(input : str, filepath : str, shouldOpen : bool = False):
         if input in page.extract_text():
             hits.append([FileReader.get_page_number(page), page.extract_text().count(input)])
             hasOccured = True
+        # check, wether script should open file in browser and wether a occurence was found in the file. If yes: open new tab to file://... URL.
         if hasOccured & shouldOpen:
             webbrowser.open_new_tab(f"file://{os.path.abspath(filepath)}")
     return hits  
