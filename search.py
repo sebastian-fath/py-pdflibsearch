@@ -1,7 +1,7 @@
 """ 
 name: py-pdflibsearch
 author: Sebastian Fath
-version: 0.1
+version: 0.1.1
 created: 2023-10-31
 last updated: 2023-10-31
  """
@@ -75,7 +75,7 @@ def foldersearch(input : str, path : str):
                 if input in page.extract_text():
                     hits.append([file, FileReader.get_page_number(page) + 1, page.extract_text().count(input)]) # Add 1 to pagenumber due to 0- vs. 1-indexing :/
         else: 
-            print(f"non-pdf file found in library: {file}. continuing with search...")
+            UserWarning(f"non-pdf file found in library: {file}. continuing with search...")
     return hits
 
 # searches file at "path" for string (usually 'library'), returns array of arrays : pagenumber, occurences
