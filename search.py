@@ -24,7 +24,7 @@ def main(argv):
     for opt, arg in opts:
         # print usage info and exit if -h is specified
         if opt in ('-h', '--help'):
-            print("search.py -m <mode: folder, ...> -i <search: str> -f <relative path to directory or file: str> [-o: flag to open documents, where string was found] ") # TODO write actually decent help instructions
+            print("search.py -m <mode: folder, ...> -i <search: str> -f <relative path to directory or file: str> [-o: flag to autoopen files, -h: prints usage] ") # TODO write actually decent help instructions
             sys.exit()
         # this specifies how this program is supposed to be run.
         if opt in ('-m', '--mode'):
@@ -50,7 +50,7 @@ def main(argv):
         d_filesearch = pd. DataFrame(filesearch(input, filepath, shouldOpen=shouldOpen), columns=["page", "pagenumbers"])
         print(d_filesearch)
     else:
-        print("please specify a mode by which to search")
+        print("please specify a valid mode by which to search")
 
 # searches folder "path" for string (usually 'library'), returns array of arrays : filename, pagenumber, occurences
 def foldersearch(input : str, path : str = 'library', shouldOpen : bool = False):
