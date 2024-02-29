@@ -6,7 +6,7 @@ This is a extremely rudimentary implementation of a way to search multiple pdf-f
 
 1. Open terminal in directory where search.py is located.
 2. create a subdirectory, ideally in the same directory as the python file, in which you store the pdf-files to be searched (usually called "library")
-3. run ´python search.py -i <search: str>
+3. run `python search.py -i <search: str>`
 
 ## Options and Flags:
 

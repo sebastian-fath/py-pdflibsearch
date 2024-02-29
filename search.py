@@ -65,7 +65,7 @@ def foldersearch(input : str, path : str = 'library', shouldOpen : bool = False)
                     hits.append([file, FileReader.get_page_number(page), page.extract_text().count(input)])
                     hasOccured = True
             if hasOccured & shouldOpen:
-                webbrowser.open_new_tab(f"file://{os.path.abspath(path)}")
+                webbrowser.open_new_tab(f"file://{os.path.abspath(f"{path}/{file}")}") # f"{path}/{file} curiously worked to fix issue, where os.path.abspath(file) didn't open cwd/path/file but cwd/file. Looking at earlier code this usage actually kinda makes sense :/
         else: 
             print(f"non-pdf file found in library: {file}. continuing with search...")
     return hits
